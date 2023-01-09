@@ -1,0 +1,132 @@
+import React from "react";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend
+} from "recharts";
+
+import { useState, useEffect, useCallback } from "react";
+
+function App() {
+
+  const [dataChart, setDataChart] = useState([]);
+  // const [csv, setCsv] = useState();
+
+  const [opacity, setOpacity] = useState({
+    uv: 1,
+    dados: 1
+  });
+
+  const [lineProps, setLineProps] = useState();
+
+  const handleLegendMouseEnter = (e) => {
+    if (!lineProps[e.dataKey]) {
+      setLineProps({ ...lineProps, hover: e.dataKey });
+    }
+  };
+
+  const handleLegendMouseLeave = (e) => {
+    setlineProps({ ...lineProps, hover: e.dataKey });
+  };
+
+  const selectLine = (e) => {
+    setLineProps({
+      ...lineProps,
+      [e.dataKey]: !lineProps[e.dataKey],
+      hover: null
+    });
+  };
+
+  const handleMouseEnter = useCallback(
+    (o) => {
+      const { dataKey } = o;
+
+      setOpacity({ ...opacity, [dataKey]: 0 });
+    },
+    [opacity, setOpacity]
+  );
+
+  const handleMouseLeave = useCallback(
+    (o) => {
+      const { dataKey } = o;
+      setOpacity({ ...opacity, [dataKey]: 1 });
+    },
+    [opacity, setOpacity]
+  );
+
+  // function handleClick(dataKey) {
+  //   if (_.includes(this.state.disabled, dataKey)) {
+  //     this.setState({
+  //       disabled: this.state.disabled.filter(obj => obj !== dataKey)
+  //     });
+  //   } else {
+  //     this.setState({ disabled: this.state.disabled.concat(dataKey) });
+  //   }
+  // };
+
+
+  return (
+    <>
+      <LineChart
+        width={1800}
+        height={450}
+        data={dataChart}
+        margin={{
+          top: 100,
+          right: 0,
+          left: 0,
+          bottom: 5
+        }}
+      >
+        <CartesianGrid strokeDasharray="0 0" />
+        <XAxis
+          dataKey="name"
+          axisLine={false}
+          tickLine={false}
+        />
+        <YAxis />
+        <Tooltip />
+        <Legend
+          // onClick={selectLine}
+          // onMouseOver={handleLegendMouseEnter}
+          // onMouseOut={handleLegendMouseLeave}
+
+        // onMouseEnter={handleMouseEnter}
+        // onMouseLeave={handleMouseLeave}
+        // onClick={(e) => console.log(e.dataKey)}
+        // onClick={(e) => console.log(e)}
+        // onClick={() => hideSelected}
+        // onClick={(e) => { if (e.dataKey === 'dados') e.payload.hide = 'true' }}
+
+        // (e) => console.log(e)
+        /*{if (e.dataKey === 'dados') e.inactive === 'true'}*/
+        />
+
+        <Line
+          type="monotone"
+          dataKey="dados"
+          stroke="#8884d8"
+          strokeOpacity={opacity.uv}
+          // activeDot={{ r: 8 }}
+          // hide=''
+          // hide={lineProps === true}
+        />
+
+
+        <Line
+          type="monotone"
+          dataKey="uv"
+          stroke="#82ca9d"
+          strokeOpacity={opacity.dados}
+        />
+      </LineChart>
+    </>
+  );
+}
+
+
+export default App

@@ -11,42 +11,9 @@ import {
 
 import { useState, useEffect, useCallback } from "react";
 
-import _ from "lodash";
-
-import { format, parseISO, subDays } from 'date-fns';
-import { useRef } from "react";
-// import { da } from 'date-fns/locale';
-
-
-
-
-
 function App() {
 
   const [dataChart, setDataChart] = useState([]);
-  // const [csv, setCsv] = useState();
-
-  const [opacity, setOpacity] = useState({
-    uv: 1,
-    dados: 1
-  });
-
-  const handleMouseEnter = useCallback(
-    (o) => {
-      const { dataKey } = o;
-
-      setOpacity({ ...opacity, [dataKey]: 0 });
-    },
-    [opacity, setOpacity]
-  );
-
-  const handleMouseLeave = useCallback(
-    (o) => {
-      const { dataKey } = o;
-      setOpacity({ ...opacity, [dataKey]: 1 });
-    },
-    [opacity, setOpacity]
-  );
 
   function csvToArray(str, delimiter = ",") {
     const headers = str.slice(0, str.indexOf("\n")).trim().split(delimiter);
@@ -100,26 +67,19 @@ function App() {
 
   };
 
-  function handleClick(dataKey) {
-    if (_.includes(this.state.disabled, dataKey)) {
-      this.setState({
-        disabled: this.state.disabled.filter(obj => obj !== dataKey)
-      });
-    } else {
-      this.setState({ disabled: this.state.disabled.concat(dataKey) });
+  console.log(dataChart[0])
+
+  const [estadoHide, setEstadoHide] = useState(false);
+
+  function handleState(e) {
+    if (e.dataKey) {
+      console.log(e)
+      setEstadoHide(e.dataKey);
     }
-  };
+  }
 
-
-  // function handleClick() {
-  //   return Legend.addEventListener("click", (e) => {
-  //     console.log(e.target);
-  //   })
-
-  // }
-
-
-
+  const teste = ['dados', 'uv']
+  const testeColor = ['red', 'blue']
 
   return (
     <>
@@ -145,26 +105,31 @@ function App() {
         />
         <YAxis />
         <Tooltip />
+
         <Legend
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-          // onClick={(e) => console.log(e.dataKey)}
+          onClick={(e) => handleState(e)}
 
         />
-        <Line
-          type="monotone"
-          dataKey="dados"
-          stroke="#8884d8"
-          strokeOpacity={opacity.uv}
-          // activeDot={{ r: 8 }}
-          hide=''
-        />
-        <Line
-          type="monotone"
-          dataKey="uv"
-          stroke="#82ca9d"
-          strokeOpacity={opacity.dados}
-        />
+
+        {
+          teste.map((t, i) => {
+
+            let hide = false
+            if (t !== estadoHide && estadoHide) {
+              hide = true
+            }
+
+            return (
+              <Line
+                key={i}
+                type="monotone"
+                stroke={testeColor[i]}
+                dataKey={t}
+                hide={hide}
+              />
+            )
+          })
+        }
       </LineChart>
     </>
   );
