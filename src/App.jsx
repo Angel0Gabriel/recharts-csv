@@ -67,14 +67,16 @@ function App() {
 
   };
 
-  console.log(dataChart[0])
 
-  const [estadoHide, setEstadoHide] = useState(false);
+  const [estadoHide, setEstadoHide] = useState('');
 
   function handleState(e) {
-    if (e.dataKey) {
-      console.log(e)
-      setEstadoHide(e.dataKey);
+    if (estadoHide) {
+      setEstadoHide('')
+    } else {
+      if (e.dataKey) {
+        setEstadoHide(e.dataKey);
+      }
     }
   }
 
@@ -108,14 +110,14 @@ function App() {
 
         <Legend
           onClick={(e) => handleState(e)}
-
         />
 
         {
-          teste.map((t, i) => {
+          teste.map((value, i) => {
 
             let hide = false
-            if (t !== estadoHide && estadoHide) {
+
+            if (value !== estadoHide && estadoHide) {
               hide = true
             }
 
@@ -124,7 +126,7 @@ function App() {
                 key={i}
                 type="monotone"
                 stroke={testeColor[i]}
-                dataKey={t}
+                dataKey={value}
                 hide={hide}
               />
             )
